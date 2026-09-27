@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#b40012">
+<title>Öğrenme Şekilleri Çalışması</title>
+<style>
+:root{--red:#c70016;--red-dark:#9d0011;--ink:#17191d;--muted:#69717d;--line:#e3e6ea;--soft:#f4f6f8;--white:#fff;--shadow:0 22px 64px rgba(20,26,35,.11)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;background:#f3f5f7;color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;padding:22px}
+button{font:inherit}
+.app{width:min(820px,100%);margin:0 auto}
+.shell{background:var(--white);border:1px solid var(--line);border-radius:26px;box-shadow:var(--shadow);overflow:hidden}
+.screen{display:none;padding:clamp(24px,5vw,48px)}
+.screen.active{display:block}
+.brand{display:flex;align-items:center;justify-content:center;gap:14px;margin:0 auto 30px;color:#050505}
+.brand-word{font-size:clamp(29px,6vw,48px);font-weight:900;letter-spacing:.24em;margin-right:-.24em;line-height:1}
+.brand-mark{position:relative;width:45px;height:62px;transform:rotate(22deg)}
+.brand-mark span{position:absolute;inset:50% auto auto 50%;border:4px solid #ef0015;border-radius:50%;transform:translate(-50%,-50%)}
+.brand-mark span:nth-child(1){width:19px;height:42px}.brand-mark span:nth-child(2){width:31px;height:54px}.brand-mark span:nth-child(3){width:43px;height:66px}
+.brand-sub{text-align:center;color:#444;font-size:10px;letter-spacing:.11em;font-weight:800;margin-top:-20px;margin-bottom:34px;text-transform:uppercase}
+h1{font-size:clamp(31px,6vw,46px);line-height:1.08;letter-spacing:-.035em;margin:0 0 15px;text-align:center}
+.lead{max-width:650px;margin:0 auto;color:#505863;font-size:17px;line-height:1.62;text-align:center}
+.intro-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:28px 0 22px}
+.rank-info{border:1px solid var(--line);border-radius:15px;padding:13px 8px;text-align:center;background:#fff}
+.rank-info strong{display:block;color:var(--red);font-size:24px;line-height:1;margin-bottom:7px}
+.rank-info span{font-size:12px;color:#555e69;line-height:1.3}
+.notice{border:1px solid var(--line);background:#f8f9fa;border-radius:16px;padding:16px 18px;font-size:14px;line-height:1.55;color:#4d5560;margin:0 0 22px}
+.btn{appearance:none;border:0;border-radius:14px;min-height:52px;padding:14px 20px;font-weight:800;cursor:pointer;transition:transform .16s ease,background .16s ease,opacity .16s ease}
+.btn-primary{background:var(--red);color:#fff}.btn-primary:hover{background:var(--red-dark);transform:translateY(-1px)}
+.btn-secondary{background:#edf0f3;color:#20242a}.btn-ghost{background:#fff;color:#343a43;border:1px solid var(--line)}
+.btn:disabled{opacity:.42;cursor:not-allowed;transform:none}
+.wide{width:100%}
+.topbar{display:flex;align-items:flex-end;gap:16px;margin-bottom:28px}
+.progress-wrap{flex:1}.progress-meta{display:flex;justify-content:space-between;gap:16px;font-size:13px;color:var(--muted);font-weight:700;margin-bottom:8px}
+.progress{height:9px;background:#e9edf1;border-radius:999px;overflow:hidden}.progress span{display:block;height:100%;background:var(--red);width:10%;transition:width .25s ease}
+.eyebrow{color:var(--red);font-size:13px;letter-spacing:.08em;font-weight:900;text-transform:uppercase;margin-bottom:10px}
+.question-title{font-size:clamp(23px,4vw,31px);line-height:1.25;letter-spacing:-.02em;margin:0 0 9px}
+.question-help{color:var(--muted);line-height:1.5;margin:0 0 19px}
+.next-score{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#17191d;color:#fff;border-radius:14px;padding:13px 16px;margin-bottom:14px}
+.next-score span{font-size:13px;color:#d6d9dd}.next-score strong{font-size:21px;white-space:nowrap}
+.choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.choice{position:relative;min-height:104px;border:1.5px solid #dde1e6;border-radius:17px;background:#fff;padding:18px 62px 18px 18px;text-align:left;color:var(--ink);font-size:17px;font-weight:750;line-height:1.35;cursor:pointer;transition:.16s ease}
+.choice:hover{border-color:#abb1b9;background:#fcfcfd;transform:translateY(-1px)}
+.choice.assigned{border-color:#bbc2ca;background:#f7f8f9}.choice.assigned:hover{transform:none}
+.score-badge{position:absolute;right:16px;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:#eef0f3;color:#6d747d;font-size:18px;font-weight:900}
+.choice.assigned .score-badge{background:var(--red);color:#fff}
+.choice-order{position:absolute;left:17px;bottom:10px;color:#8a9199;font-size:11px;font-weight:700}
+.row-tools{display:flex;justify-content:flex-end;margin-top:12px}.link-btn{border:0;background:transparent;color:#626b76;text-decoration:underline;text-underline-offset:3px;font-weight:700;cursor:pointer;padding:7px 0}
+.nav{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px}
+.result-head{margin-bottom:26px}.result-sub{max-width:630px;margin:0 auto;color:var(--muted);line-height:1.55;text-align:center}
+.primary-result{margin:0 0 18px;padding:20px;border:1px solid var(--line);border-radius:18px;background:#f8f9fa;text-align:center}
+.primary-result .label{font-size:12px;color:var(--muted);font-weight:850;letter-spacing:.08em;text-transform:uppercase}.primary-result strong{display:block;font-size:clamp(25px,5vw,35px);margin-top:7px}.primary-result p{margin:9px auto 0;color:#555d67;line-height:1.5;max-width:620px}
+.chart{border:1px solid var(--line);border-radius:18px;padding:20px;background:#fff}
+.bar-row{display:grid;grid-template-columns:132px minmax(0,1fr) 67px;gap:13px;align-items:center;margin:0 0 18px}.bar-row:last-of-type{margin-bottom:8px}
+.bar-label{font-size:15px;font-weight:850}.bar-track{position:relative;height:18px;background:#e9edf1;border-radius:999px;overflow:hidden}.bar-fill{height:100%;background:var(--red);border-radius:999px;transition:width .7s ease}.bar-score{text-align:right;font-weight:900;font-size:18px}
+.axis{display:flex;justify-content:space-between;margin:3px 80px 0 145px;color:#8a929c;font-size:11px}.chart-note{color:#737b85;font-size:12px;line-height:1.45;margin:13px 0 0;text-align:center}
+.dimension-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0}
+.dimension{border:1px solid var(--line);border-radius:16px;padding:16px}.dimension-head{display:flex;justify-content:space-between;gap:12px;align-items:baseline}.dimension h3{margin:0;font-size:17px}.dimension b{font-size:20px;color:var(--red)}.dimension p{margin:8px 0 0;color:#626a74;line-height:1.46;font-size:13px}
+.actions{display:grid;grid-template-columns:1.15fr 1fr;gap:12px;margin-top:20px}.actions.three{grid-template-columns:1.2fr 1fr 1fr}
+.footnote{font-size:12px;color:#858c95;line-height:1.5;text-align:center;margin:17px auto 0;max-width:650px}
+.detail-intro{margin:0 0 20px;color:var(--muted);line-height:1.55;text-align:center}
+.detail-list{display:grid;gap:14px}
+.detail-row{border:1px solid var(--line);border-radius:17px;overflow:hidden}.detail-row h3{margin:0;padding:13px 16px;background:#f4f6f8;font-size:15px}.detail-items{display:grid;grid-template-columns:1fr 1fr}.detail-item{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:13px 16px;border-top:1px solid #edf0f2}.detail-item:nth-child(odd){border-right:1px solid #edf0f2}.detail-item span{font-size:14px;line-height:1.35}.detail-item b{flex:none;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:#20242a;color:#fff}
+.detail-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px}
+@media(max-width:640px){body{padding:0;background:#fff}.shell{border:0;border-radius:0;box-shadow:none;min-height:100vh}.screen{padding:25px 18px 32px}.intro-grid{grid-template-columns:1fr 1fr}.choice-grid,.dimension-grid,.actions,.actions.three,.detail-actions{grid-template-columns:1fr}.choice{min-height:90px}.bar-row{grid-template-columns:106px minmax(0,1fr) 58px;gap:9px}.axis{margin-left:115px;margin-right:67px}.detail-items{grid-template-columns:1fr}.detail-item:nth-child(odd){border-right:0}.brand{margin-bottom:27px}.brand-sub{margin-bottom:29px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+@media print{body{padding:0;background:#fff}.shell{box-shadow:none;border:0}.screen{display:none!important}#result.screen{display:block!important;padding:10mm}.actions,.footnote{display:none!important}}
+</style>
+</head>
+<body>
+<main class="app"><section class="shell">
+  <div id="intro" class="screen active">
+    <div class="brand" aria-label="Sinerji"><div class="brand-word">SİNERJİ</div><div class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></div></div>
+    <div class="brand-sub">Eğitim ve Yönetim Danışmanlığı</div>
+    <h1>Öğrenme Şekilleri Çalışması</h1>
+    <p class="lead">Öğrenirken hangi aşamalara daha fazla ağırlık verdiğinizi görün. Her satırdaki dört ifadeyi size en çok uyandan en az uyana doğru sıralayın.</p>
+    <div class="intro-grid" aria-label="Puanlama ölçeği">
+      <div class="rank-info"><strong>4</strong><span>Bana en çok uyan</span></div>
+      <div class="rank-info"><strong>3</strong><span>Bana daha çok uyan</span></div>
+      <div class="rank-info"><strong>2</strong><span>Bana daha az uyan</span></div>
+      <div class="rank-info"><strong>1</strong><span>Bana en az uyan</span></div>
+    </div>
+    <div class="notice"><strong>Nasıl çalışır?</strong> Her ekranda dört ifadeye sırayla dokunun. İlk seçiminiz 4, ikinci seçiminiz 3, üçüncü seçiminiz 2 ve son seçiminiz 1 puan alır. Aynı puanın iki kez verilmesine sistem izin vermez.</div>
+    <button id="startBtn" class="btn btn-primary wide">Çalışmaya Başla</button>
+    <p class="footnote">Yanıtlarınız tarayıcınızda işlenir; herhangi bir yere gönderilmez veya kaydedilmez.</p>
+  </div>
+
+  <div id="quiz" class="screen">
+    <div class="topbar"><div class="progress-wrap"><div class="progress-meta"><span id="progressText"></span><span id="completionText"></span></div><div class="progress"><span id="progressBar"></span></div></div></div>
+    <div id="eyebrow" class="eyebrow"></div>
+    <h2 class="question-title">Bu ifadeleri size ne kadar uyduğuna göre sıralayın.</h2>
+    <p class="question-help">Size en çok uyan ifadeye önce dokunun. Seçim sırası puanı otomatik belirler.</p>
+    <div class="next-score"><span id="nextScoreHelp"></span><strong id="nextScoreValue"></strong></div>
+    <div id="choiceGrid" class="choice-grid"></div>
+    <div class="row-tools"><button id="resetRowBtn" class="link-btn">Bu satırı sıfırla</button></div>
+    <div class="nav"><button id="backBtn" class="btn btn-secondary">Geri</button><button id="nextBtn" class="btn btn-primary" disabled>İleri</button></div>
+  </div>
+
+  <div id="result" class="screen">
+    <div class="result-head"><h1>Öğrenme Profiliniz</h1><p class="result-sub">Sonuçlar dört öğrenme aşamasına verdiğiniz toplam puanları gösterir. Yüksek puan, o aşamayı öğrenme sürecinizde daha sık tercih ettiğinizi anlatır.</p></div>
+    <div id="primaryResult" class="primary-result"></div>
+    <div class="chart"><div id="bars"></div><div class="axis"><span>10</span><span>20</span><span>30</span><span>40</span></div><p class="chart-note">Her başlık 10–40 aralığındadır. Dört başlığın toplamı her zaman 100 puandır.</p></div>
+    <div id="dimensionGrid" class="dimension-grid"></div>
+    <div class="actions three"><button id="detailBtn" class="btn btn-primary">Verdiğim Puanları Gör</button><button id="printBtn" class="btn btn-secondary">Yazdır veya PDF Kaydet</button><button id="restartBtn" class="btn btn-ghost">Yeniden Başla</button></div>
+    <p class="footnote">Bu çalışma kişisel farkındalık amacı taşır; psikometrik değerlendirme veya kesin kişilik sınıflandırması değildir.</p>
+  </div>
+
+  <div id="detail" class="screen">
+    <h1>Verdiğiniz Puanlar</h1>
+    <p class="detail-intro">Her satırdaki ifadeler ve verdiğiniz 4–3–2–1 puanları aşağıda birlikte gösterilmektedir.</p>
+    <div id="detailList" class="detail-list"></div>
+    <div class="detail-actions"><button id="backToResultBtn" class="btn btn-primary">Sonuçlara Dön</button><button id="restartDetailBtn" class="btn btn-secondary">Yeniden Başla</button></div>
+  </div>
+</section></main>
+<script>
+const rows=[
+  ['Organize Olma','Katılma','Gözden Geçirme','Düşünme'],
+  ['Hazırlanma','Konsantre Olma','Aklına Yatma','Devamını Getirme'],
+  ['Sıralama','Şaşırtıcı','Özümsemek','Teori'],
+  ['Yapı','Özgürlük','İfade','Prensip'],
+  ['Kaynak','Uygulama','Geri Bildirim','Kavram'],
+  ['Hedef','Deneyim','Tepki Verme','Zıtlık'],
+  ['Maksatlı','İçine Girmek','Gözlemci','Geniş Yelpaze'],
+  ['Sınırlar','Akış','Kavrama','Model'],
+  ['Beklenti','Uyarlama','Tetkik Etmek','Özetlemek'],
+  ['Taslak','İlişki Kurmak','Hayal Gücü','Teori']
+];
+const dimensions=[
+  {key:'P',name:'Planlama',description:'Öğrenme sürecini yapılandırma, hedef belirleme ve hazırlık yapma eğilimini gösterir.'},
+  {key:'U',name:'Uygulama',description:'Katılarak, deneyerek ve öğrendiklerinizi hayata geçirerek ilerleme eğilimini gösterir.'},
+  {key:'Y',name:'Yansıtma',description:'Gözlemleme, gözden geçirme ve deneyimler üzerine düşünme eğilimini gösterir.'},
+  {key:'G',name:'Genelleme',description:'Deneyimlerden kavram, ilke, model ve genel sonuçlar çıkarma eğilimini gösterir.'}
+];
+let current=0;
+let answers=rows.map(()=>Array(4).fill(null));
+const $=id=>document.getElementById(id);
+function show(id){document.querySelectorAll('.screen').forEach(el=>el.classList.remove('active'));$(id).classList.add('active');window.scrollTo({top:0,behavior:'smooth'})}
+function assignedCount(){return answers[current].filter(v=>v!==null).length}
+function nextScore(){return 4-assignedCount()}
+function renderRow(){
+  const count=assignedCount(),score=nextScore();
+  $('progressText').textContent=`Satır ${current+1} / ${rows.length}`;
+  $('completionText').textContent=`${answers.filter(r=>r.every(v=>v!==null)).length} tamamlandı`;
+  $('progressBar').style.width=`${((current+1)/rows.length)*100}%`;
+  $('eyebrow').textContent=`Değerlendirme ${current+1}`;
+  $('nextScoreHelp').textContent=count<4?'Şimdi dokunacağınız ifade':'Bu satır tamamlandı';
+  $('nextScoreValue').textContent=count<4?`${score} puan alacak`:'4–3–2–1 tamam';
+  $('choiceGrid').innerHTML='';
+  rows[current].forEach((text,index)=>{
+    const value=answers[current][index];
+    const button=document.createElement('button');
+    button.type='button';
+    button.className='choice'+(value!==null?' assigned':'');
+    button.disabled=value!==null;
+    button.innerHTML=`${text}<span class="score-badge">${value??'–'}</span>${value!==null?`<span class="choice-order">${5-value}. seçim</span>`:''}`;
+    button.addEventListener('click',()=>{if(answers[current][index]===null){answers[current][index]=nextScore();renderRow()}});
+    $('choiceGrid').appendChild(button);
+  });
+  $('backBtn').disabled=current===0;
+  $('nextBtn').disabled=count!==4;
+  $('nextBtn').textContent=current===rows.length-1?'Sonucu Gör':'İleri';
+  $('resetRowBtn').disabled=count===0;
+}
+function scores(){return dimensions.map((d,column)=>answers.reduce((sum,row)=>sum+(row[column]||0),0))}
+function profileText(sorted){
+  const top=sorted[0],second=sorted[1];
+  if(top.score===second.score)return `Öne çıkan tercihleriniz: ${top.name} ve ${second.name}.`;
+  if(top.score-second.score<=2)return `En belirgin tercihiniz ${top.name}; ${second.name} da profilinizde yakın görünüyor.`;
+  return `En belirgin öğrenme tercihiniz: ${top.name}.`;
+}
+function renderResults(){
+  const totals=scores();
+  const ranked=dimensions.map((d,i)=>({...d,score:totals[i]})).sort((a,b)=>b.score-a.score);
+  const leaders=ranked.filter(item=>item.score===ranked[0].score).map(item=>item.name).join(' ve ');
+  $('primaryResult').innerHTML=`<span class="label">Öne çıkan öğrenme tercihi</span><strong>${leaders}</strong><p>${profileText(ranked)} Bu sonuç, diğer aşamaları kullanmadığınız anlamına gelmez; öğrenirken hangi aşamalara daha fazla ağırlık verdiğinizi gösterir.</p>`;
+  $('bars').innerHTML=dimensions.map((d,i)=>{const width=Math.max(0,Math.min(100,((totals[i]-10)/30)*100));return `<div class="bar-row"><div class="bar-label">${d.name}</div><div class="bar-track"><div class="bar-fill" style="width:${width}%"></div></div><div class="bar-score">${totals[i]}</div></div>`}).join('');
+  $('dimensionGrid').innerHTML=dimensions.map((d,i)=>`<article class="dimension"><div class="dimension-head"><h3>${d.name}</h3><b>${totals[i]} / 40</b></div><p>${d.description}</p></article>`).join('');
+  show('result');
+}
+function renderDetails(){
+  $('detailList').innerHTML=rows.map((row,rowIndex)=>`<section class="detail-row"><h3>Satır ${rowIndex+1}</h3><div class="detail-items">${row.map((text,column)=>`<div class="detail-item"><span>${text} <small>· ${dimensions[column].name}</small></span><b>${answers[rowIndex][column]}</b></div>`).join('')}</div></section>`).join('');
+  show('detail');
+}
+function restart(){current=0;answers=rows.map(()=>Array(4).fill(null));renderRow();show('intro')}
+$('startBtn').addEventListener('click',()=>{renderRow();show('quiz')});
+$('resetRowBtn').addEventListener('click',()=>{answers[current]=Array(4).fill(null);renderRow()});
+$('backBtn').addEventListener('click',()=>{if(current>0){current--;renderRow();window.scrollTo({top:0,behavior:'smooth'})}});
+$('nextBtn').addEventListener('click',()=>{if(assignedCount()!==4)return;if(current<rows.length-1){current++;renderRow();window.scrollTo({top:0,behavior:'smooth'})}else renderResults()});
+$('detailBtn').addEventListener('click',renderDetails);
+$('backToResultBtn').addEventListener('click',()=>show('result'));
+$('printBtn').addEventListener('click',()=>window.print());
+$('restartBtn').addEventListener('click',restart);
+$('restartDetailBtn').addEventListener('click',restart);
+</script>
+</body>
+</html>
